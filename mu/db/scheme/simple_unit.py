@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
-from peewee import ForeignKeyField, BigIntegerField
+from peewee import ForeignKeyField
 from .model import Model
 from .unit import Unit
 
 class SimpleUnit(Model):
-	id = ForeignKeyField(Unit, primary_key = True, help_text = '')
-	code = BigIntegerField(index = True, help_text = '')
+	id = ForeignKeyField(Unit, primary_key = True, column_name = 'id', help_text = 'Идентификатор единицы измерения')
+	
+	class Meta:
+		table_name = 'simple_unit'

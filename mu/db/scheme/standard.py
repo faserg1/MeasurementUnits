@@ -5,5 +5,4 @@ from .model import Model
 
 class Standard(Model):
 	"""Стандарт единицы измерения"""
-	id = UUIDField(primary_key=True)
-	
+	id = UUIDField(primary_key = True, help_text = '')

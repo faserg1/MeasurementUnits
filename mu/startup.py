@@ -7,4 +7,5 @@ Database.init()
 db = Database.get()
 db.connect()
 
+DevMigration.down()
 DevMigration.up()

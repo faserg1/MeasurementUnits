@@ -9,3 +9,6 @@ class Language(Model):
 	name = CharField(help_text = '')
 	own_name = CharField(help_text = '')
 	code_num = BigIntegerField(null = True, help_text = '')
+	
+	class Meta:
+		table_name = 'lang'
