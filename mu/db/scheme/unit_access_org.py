@@ -2,14 +2,12 @@
 
 from peewee import UUIDField, ForeignKeyField
 from .model import Model
-from .unit import Unit
-from .user import User
+from .org import Organization
 
-class UnitAccessUser(Model):
+class UnitAccessOrganizaton(Model):
 	""""""
 	id = UUIDField(primary_key = True, help_text = '')
-	unit = ForeignKeyField(Unit, help_text = '')
-	user = ForeignKeyField(User, help_text = '')
-	
+	org = ForeignKeyField(Organization, backref = 'access', help_text = '')
+
 	class Meta:
-		table_name = 'unit_access_user'
+		table_name = 'unit_access_org'
