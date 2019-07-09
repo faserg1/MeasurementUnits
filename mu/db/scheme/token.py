@@ -2,10 +2,9 @@
 
 from peewee import UUIDField, ForeignKeyField
 from .model import Model
+from .user import User
 
-class UserOrganization(Model):
-	""" """
+class Token(Model):
+	""""""
 	id = UUIDField(primary_key = True, help_text = '')
-	
-	class Meta:
-		table_name = 'user_org'
+	user = ForeignKeyField(User, help_text = '')

@@ -3,9 +3,9 @@
 from peewee import UUIDField, ForeignKeyField
 from .model import Model
 
-class UserOrganization(Model):
+class OrganizationAccess:
 	""" """
 	id = UUIDField(primary_key = True, help_text = '')
-	
+
 	class Meta:
-		table_name = 'user_org'
+		table_name = 'org_access'

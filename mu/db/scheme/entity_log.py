@@ -6,6 +6,7 @@ from .user import User
 from .org import Organization
 
 class EntityLog(Model):
+	""" """
     id = UUIDField(primary_key = True, help_text = '')
 	entity = UUIDField(index = True, help_text = '')
 	user = ForeignKeyField(User, help_text = '')
