@@ -5,4 +5,4 @@ from .app_view import AppView
 class AppVer0_1(AppView):
 	
 	class Data:
-		route = "ver-0.1"
+		route = "api/ver-0.1"
