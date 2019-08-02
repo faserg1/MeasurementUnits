@@ -3,6 +3,7 @@
 import inspect
 #from .app import app
 from utils.class_utils import get_class_of_method
+from utils.route_data import RouteData
 import json
 
 class AppView:
@@ -29,23 +30,46 @@ class AppView:
 			_full_route = AppView._normalize_route(cls._route + "/")
 			
 	def init_self_route(self):
-		data_cls = self._get_data_class()
+		routes = []
+		data_cls = cls._get_data_class()
 		if data_cls:
-			self._route = data_cls.route
-			if 'parent' in data_cls.__dict__:
-				parent = data_cls.parent
-				if inspect.isclass(parent):
-					self._parent = parent
-				else:
-					self._parent = parent.__class__
-		if self._parent:
-			pass
+			cls._route = data_cls.route
+			routes.append(data_cls.route)
+		parents = self._get_recursive_parents()
+		for parent in parents:
+			data_cls = parent._get_data_class()
+			if data_cls:
+				cls._route = data_cls.route
+				routes.insert(0, data_cls.route)
+		self._full_route = "/".join(routes)
 	
 	@staticmethod
-	def route(func, *args, **kwargs):
-		cls = get_class_of_method(func)
-		func_wrapper = lambda: json.dumps(func())
-		cls._app.add_url_rule(cls._full_route, func.__name__, func_wrapper, *args, **kwargs)
+	def route(*args, **kwargs):
+		def route_wrapper(func):
+			print(cls)
+			#cls = get_class_of_method(func)
+			func_wrapper = lambda *l_args, **l_kwargs: json.dumps(func(*l_args, **l_kwargs))
+			cls._routes.append(RouteData(cls, "", func.__name__, func_wrapper, *args, **kwargs))
+			#cls._app.add_url_rule(cls._full_route, func.__name__, func_wrapper, *args, **kwargs)
+		return route_wrapper
+	
+	@classmethod
+	def _get_recursive_parents(cls):
+		parents = []
+		data_cls = cls._get_data_class()
+		if data_cls:
+			if 'parent' in data_cls.__dict__:
+				temp_parent = data_cls.parent
+				parent = None
+				if inspect.isclass(parent):
+					parent = temp_parent
+				else:
+					parent = temp_parent.__class__
+				if parent:
+					parents.append(parent)
+					parents_inner = parent._get_recursive_parents()
+					parents += parents_inner
+		return parents
 	
 	@classmethod
 	def _get_data_class(cls):

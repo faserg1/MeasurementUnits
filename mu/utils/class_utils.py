@@ -5,7 +5,7 @@ import inspect
 def get_class_of_method(meth):
 	if inspect.ismethod(meth):
 		for cls in inspect.getmro(meth.__self__.__class__):
-		   if cls.__dict__.get(meth.__name__) is meth:
+			if cls.__dict__.get(meth.__name__) is meth:
 				return cls
 		meth = meth.__func__  # fallback to __qualname__ parsing
 	if inspect.isfunction(meth):
