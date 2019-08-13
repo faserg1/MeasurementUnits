@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 
-from flask import Flask
+import cherrypy
+import json
+from utils.json import jsonable
 
-app = Flask('mu')
+class App(object):
+	def __init__(self):
+		pass
+	
+	def _cp_dispatch(self, vpath):
+		if len(vpath) == 0:
+			return self
+		return vpath
+	
+	@cherrypy.expose
+	@jsonable()
+	def index(self):
+		return {"luck": True}
