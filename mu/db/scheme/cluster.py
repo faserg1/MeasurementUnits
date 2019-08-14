@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-from peewee import UUIDField, CharField, BooleanField, SmallIntegerFiel, ForeignKeyField
+from peewee import UUIDField, CharField, BooleanField, SmallIntegerField, ForeignKeyField
 from .model import Model
 from .user import User
 from .org import Organization
 
 class Cluster(Model):
 	""""""
-	id = UUIDField(primary_text = '')
+	id = UUIDField(primary_key = True, help_text = '')
 	address = CharField(max_length = 256, index = True, help_text = '')
 	type = SmallIntegerField(index = True, help_text = '')
 	auto = BooleanField(index = True, help_text = '')

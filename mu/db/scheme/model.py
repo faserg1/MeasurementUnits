@@ -9,3 +9,7 @@ class Model(PeeweeModel):
 	def init(cls, db):
 		"""Инициализировать модель базой данных"""
 		cls.bind(db)
+	
+	@classmethod
+	def atomic(cls):
+		return cls._meta.database.atomic()
