@@ -9,10 +9,10 @@ Database.init()
 db = Database.get()
 db.connect()
 
+#Убрать миграции отсюда
 DevMigration.down()
 DevMigration.up()
 
-if Setup.is_first_start():
-	Setup.setup()
+Setup.setup()
 
 serve()
