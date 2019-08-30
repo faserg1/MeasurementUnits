@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from peewee import DatabaseProxy, PostgresqlDatabase
+from core.config import Config
 
 class Database:
 	"""Инициализатор базы данных"""
@@ -9,7 +10,9 @@ class Database:
 	@classmethod
 	def init(cls):
 		"""Инициализация базы данных"""
-		psql_db = PostgresqlDatabase('mu', host = 'localhost', user = 'mu_admin', password = '123456')
+		cfg = Config.getDatabaseConfig()
+		db_name = cfg.pop('db_name', "mu")
+		psql_db = PostgresqlDatabase(db_name, **cfg)
 		cls.__database_proxy.initialize(psql_db)
 
 	@classmethod
