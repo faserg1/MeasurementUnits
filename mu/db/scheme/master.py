@@ -25,7 +25,7 @@ class MasterHelper:
 					return False
 				if key.revoked:
 					return False
-				if key.revoke_date < datetime.utcnow():
+				if key.revoke_date and key.revoke_date < datetime.utcnow():
 					key.revoked = True
 					key.save()
 					return False
@@ -54,7 +54,7 @@ class MasterHelper:
 			now = datetime.utcnow()
 			keys = Master.select().where(Master.revoked == False)
 			for key in keys:
-				if key.revoke_date < now:
+				if key.revoke_date and key.revoke_date < now:
 					key.revoked = True
 					key.save()
 				else:
