@@ -9,9 +9,11 @@ class Migration:
 	def updateDatabase():
 		if not MigrationTable.table_exists():
 			MigrationTable.create_table()
+		print("Fetching migrations")
 		migrations = Migration._fetchMigrationList()
 		# TODO: Migration mechanism
 		db = Database.get()
+		print("Updating database")
 		with db.atomic() as txn:
 			if len(migrations):
 				DevMigration.down()

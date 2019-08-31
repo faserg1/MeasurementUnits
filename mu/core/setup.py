@@ -2,6 +2,7 @@
 
 from db.migration import Migration
 from db.database import Database
+from .master import MasterControl
 
 class Setup:
 	@staticmethod
@@ -12,3 +13,4 @@ class Setup:
 		db.connect()
 		print("Setting up MeasurementUnits!")
 		Migration.updateDatabase()
+		MasterControl.setup()

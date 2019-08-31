@@ -16,7 +16,7 @@ class Migration(Model):
 
 	def push(id, name, desc, reason):
 		exec_id = uuid4()
-		timestamp = datetime.now()
+		timestamp = datetime.utcnow()
 		return Migration.insert(id = exec_id, migration = id, timestamp = timestamp,
 			name = name, description = desc, reason = reason)
 
