@@ -14,3 +14,4 @@ class Setup:
 		print("Setting up MeasurementUnits!")
 		Migration.updateDatabase()
 		MasterControl.setup()
+		db.close()
