@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 import cherrypy
-from utils.json import jsonable
+from utils.format import formattable
 from utils.rest import invoke_by_method
 
 class Organization(object):
     @cherrypy.expose
-    @jsonable()
+    @formattable()
     def index(self):
         def GET():
             pass

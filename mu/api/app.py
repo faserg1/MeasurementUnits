@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import cherrypy
-from utils.json import jsonable
+from utils.format import formattable
 from .master import Master
 from .user import User
 from .org import Organization
@@ -27,6 +27,6 @@ class App(object):
 		return vpath
 
 	@cherrypy.expose
-	@jsonable()
+	@formattable()
 	def index(self):
 		return {"luck": True}

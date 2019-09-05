@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
 import cherrypy
-from utils.json import jsonable
+from utils.format import formattable
+from core.auth import authable
 from utils.rest import invoke_by_method
 
 class User(object):
     @cherrypy.expose
-    @jsonable()
+    @authable()
+    @formattable()
     def index(self):
         def GET():
             return {'users': [], 'count': 0}

@@ -3,6 +3,7 @@
 import cherrypy
 from .app import App
 from db.database import Database
+from utils.error import handle_error
 
 def connect_to_db():
 	db = Database.get()
@@ -15,6 +16,8 @@ def close_db():
 cherrypy.tree.mount(App(), '/app/mu/api')
 cherrypy.engine.subscribe('before_request', connect_to_db)
 cherrypy.engine.subscribe('after_request', close_db)
+
+cherrypy.config.update({'request.error_response': handle_error})
 
 def serve():
 	cherrypy.engine.start()

@@ -4,6 +4,8 @@ from db.scheme.migration import Migration as MigrationTable
 from db.database import Database
 from db.migrations.dev import DevMigration
 
+DO_RECREATE = False
+
 class Migration:
 	@staticmethod
 	def updateDatabase():
@@ -13,6 +15,8 @@ class Migration:
 		migrations = Migration._fetchMigrationList()
 		# TODO: Migration mechanism
 		db = Database.get()
+		if not DO_RECREATE:
+			return
 		print("Updating database")
 		with db.atomic() as txn:
 			if len(migrations):
