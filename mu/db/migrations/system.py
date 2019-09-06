@@ -6,6 +6,8 @@ from db.scheme.master import Master
 from db.scheme.cluster import Cluster
 from db.scheme.user import User
 from db.scheme.org import Organization
+from db.scheme.user_info import UserInfo
+from db.scheme.user_org import UserOrganization
 from db.scheme.entity_log import EntityLog
 from db.scheme.token import Token
 
@@ -13,6 +15,7 @@ from db.scheme.token import Token
 class SystemMigration:
     _tables = [
 		Master, Cluster, User, Organization,
+        UserInfo, UserOrganization,
 		EntityLog, Token
 	]
 

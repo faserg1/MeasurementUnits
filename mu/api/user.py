@@ -2,8 +2,9 @@
 
 import cherrypy
 from utils.format import formattable
-from core.auth import authable
 from utils.rest import invoke_by_method
+from core.auth import authable
+from core.user import UserControl
 
 class User(object):
     @cherrypy.expose
@@ -11,7 +12,10 @@ class User(object):
     @formattable()
     def index(self):
         def GET():
-            return {'users': [], 'count': 0}
+            users = UserControl.list_users()
+            # TODO: [OOKAMI] Check for filter parameters
+            # TODO: [OOKAMI] Check for rights
+            return {'users': users, 'count': len(users)}
         def POST():
             pass
         def default():
