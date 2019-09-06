@@ -2,6 +2,7 @@
 
 from db.migrations.system import SystemMigration
 from db.migrations.groups import GroupsMigration
+from db.migrations.units import UnitsMigration
 
 def get_migration_list():
-    return [SystemMigration, GroupsMigration]
+    return [SystemMigration, GroupsMigration, UnitsMigration]

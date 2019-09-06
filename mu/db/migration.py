@@ -22,8 +22,6 @@ class Migration:
 		current_status = Migration._get_current_status()
 		list = get_migration_list()
 		list_ids = [m.get_migration_id() for m in list]
-		print(list_ids)
-		print(current_status)
 		while len(current_status) and len(list_ids):
 			if current_status[0] == list_ids[0]:
 				current_status.pop(0)

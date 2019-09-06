@@ -24,6 +24,8 @@ def migration(id, name = None):
         # Fields
         if isinstance(id, str):
             id = uuid.UUID(id)
+        elif not isinstance(id, uuid.UUID):
+            raise ValueError('"id" must be str or UUID')
         cls.migration_id = id
         if name:
             cls.name = name
