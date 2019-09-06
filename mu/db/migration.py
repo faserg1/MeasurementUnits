@@ -9,21 +9,32 @@ class Migration:
 	@staticmethod
 	def update_database():
 		if not MigrationTable.table_exists():
-			print("Creating migration history table")
+			print('Creating migration history table')
 			MigrationTable.create_table()
 		db = Database.get()
-		print("Updating database")
+		print('Updating database')
 		with db.atomic() as txn:
 			Migration._do_update()
 
 	@staticmethod
 	def _do_update():
 		current_status = Migration._get_current_status()
-		pass
+		list = get_migration_list()
+		list_ids = [m.get_migration_id() for m in list]
+		while len(current_status):
+			# TODO: Remove first elements from all lists, while ids are equals, except the last one
+			pass
+		if len(current_status):
+			# TODO: Downgrade database to transaction in first element in list
+			# TODO: Remove the first element in list
+			pass
+		# TODO: Upgrade database by list
+		for migration in list:
+			Migration._migrate(migration, True, 'Updating database')
 
 	@staticmethod
 	def _get_current_status():
-		print("Fetching migrations")
+		print('Fetching migrations')
 		migrations = Migration._fetch_migration_list()
 		current_status = []
 		prev_migration_id = None
@@ -33,6 +44,7 @@ class Migration:
 				current_status.pop()
 			else:
 				current_status.append(id)
+		return current_status
 
 	@staticmethod
 	def _migrate(migration_cls, up = True, reason = ''):
@@ -40,6 +52,11 @@ class Migration:
 		id = migration.get_migration_id()
 		name = migration.get_name()
 		description = migration.get_description()
+		print('Migrating ' + ('to' if up else 'from') + '.')
+		if reason:
+			print('Reason: "' + reason + '"')
+		else:
+			print('Empty reason')
 		if up:
 			migration.up()
 		else:

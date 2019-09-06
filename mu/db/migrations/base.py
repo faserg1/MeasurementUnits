@@ -7,9 +7,11 @@ from db.migration_registry import register_migration
 @classmethod
 def _get_name(cls):
     return cls.name
+
 @classmethod
 def _get_migration_id(cls):
     return cls.migration_id
+
 @classmethod
 def _get_description(cls):
     return cls.description
@@ -26,7 +28,7 @@ def migration(id, name = None):
         else:
             cls.name = cls.__name__
         if not hasattr(cls, 'description'):
-            cls.desription = ''
+            cls.description = ''
             print('Migration "' + cls.name + '" has empty description.')
         # Migration methods
         def up(self):

@@ -18,16 +18,25 @@ class Migration(Model):
 
 	@staticmethod
 	def get_current_migration():
-		migration = Migration.select().order_by(-Migration.timestamp).limit(1)[0]
+		q = Migration.select().order_by(-Migration.timestamp).limit(1)
+		if not len(q):
+			return None
+		migration = q[0]
 		return migration.target_migration
 
 	@staticmethod
 	def get_previous_migration(of_migration = None):
 		if not of_migration:
-			of_migration = Migration.get_current_migration()
-		up_migration = Migration.select().where(
+			current = Migration.get_current_migration()
+			if not current:
+				return None
+			of_migration = current
+		q = Migration.select().where(
 			up = True, target_migration = of_migration).order_by(
-			-Migration.timestamp).limit(1)[0]
+			-Migration.timestamp).limit(1)
+		if not len(q):
+			return None
+		up_migration = q[0]
 		return up_migration.from_migration
 
 	@staticmethod
@@ -38,9 +47,9 @@ class Migration(Model):
 		prev = Migration.get_previous_migration()
 		m_target = id if up else prev
 		m_from = current if up else id
-		return Migration.insert(id = exec_id,
-			target_migration = m_target, from_migration = m_from,
-			timestamp = timestamp, name = name, description = desc, reason = reason)
+		Migration.insert(id = exec_id,
+			target_migration = m_target, from_migration = m_from, up = up,
+			timestamp = timestamp, name = name, description = desc, reason = reason).execute()
 
 	class Meta:
 		table_name = "migrations_history"

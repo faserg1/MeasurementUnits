@@ -7,12 +7,12 @@ from .master import MasterControl
 class Setup:
 	@staticmethod
 	def setup():
-		print("Connecting to the database")
+		print('Connecting to the database')
 		Database.init()
 		db = Database.get()
 		db.connect()
-		print("Setting up MeasurementUnits!")
+		print('Setting up MeasurementUnits!')
 		Migration.update_database()
-		print("...")
+		print('...')
 		MasterControl.setup()
 		db.close()
