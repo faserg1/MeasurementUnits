@@ -2,7 +2,6 @@
 
 from peewee import UUIDField
 from .model import Model
-from .standard import Standard
 
 class Group(Model):
 	"""Именованная группа единиц измерения, тесно связанных между собой"""

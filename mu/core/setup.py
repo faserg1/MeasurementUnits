@@ -12,6 +12,7 @@ class Setup:
 		db = Database.get()
 		db.connect()
 		print("Setting up MeasurementUnits!")
-		Migration.updateDatabase()
+		Migration.update_database()
+		print("...")
 		MasterControl.setup()
 		db.close()

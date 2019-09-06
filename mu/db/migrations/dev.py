@@ -5,6 +5,8 @@ from db.scheme.master import Master
 from db.scheme.cluster import Cluster
 from db.scheme.user import User
 from db.scheme.org import Organization
+from db.scheme.entity_log import EntityLog
+from db.scheme.token import Token
 from db.scheme.lang import Language
 from db.scheme.lang_code import LanguageCode
 from db.scheme.format import Format
@@ -29,24 +31,20 @@ from db.scheme.prefix import Prefix
 
 class DevMigration:
 	__db = Database.get()
-	
+	__tables = [
+		Master, Cluster, User, Organization,
+		EntityLog, Token,
+		Language, LanguageCode,
+		Format, Standard, StandardName,
+		Type, TypeName, TypeCode, Group, GroupName, GroupCode,
+		Unit, UnitName, UnitCode, UnitFormat, UnitType, UnitGroup,
+		SimpleUnit, ComplexUnit, AttachedUnits, Prefix,
+	]
+
 	@classmethod
 	def up(cls):
-		cls.__db.create_tables([
-			Master, Cluster, User, Organization,
-			Language, LanguageCode,
-			Format, Standard, StandardName,
-			Type, TypeName, TypeCode, Group, GroupName, GroupCode,
-			Unit, UnitName, UnitCode, UnitFormat, UnitType, UnitGroup, 
-			SimpleUnit, ComplexUnit, AttachedUnits, Prefix,
-			])
-	
+		cls.__db.create_tables(cls.__tables)
+
 	@classmethod
 	def down(cls):
-		cls.__db.drop_tables([
-			Master, Cluster, User, Organization,
-			Language, LanguageCode,
-			Format, Standard, StandardName,
-			Type, TypeName, TypeCode, Group, GroupName, GroupCode,
-			Unit, UnitName, UnitCode, UnitFormat, UnitType, UnitGroup, 
-			SimpleUnit, ComplexUnit, AttachedUnits, Prefix])
+		cls.__db.drop_tables(cls.__tables)

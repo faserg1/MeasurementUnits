@@ -16,11 +16,6 @@ class Database:
 		cls.__database_proxy.initialize(psql_db)
 
 	@classmethod
-	def upgrade(cls):
-		"""Обновление базы данных"""
-		pass
-
-	@classmethod
 	def get(cls):
 		"""Получение прокси базы данных"""
 		return cls.__database_proxy

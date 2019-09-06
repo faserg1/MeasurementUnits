@@ -5,9 +5,9 @@ from .model import Model
 from .user import User
 
 class Token(Model):
-	""""""
-	id = UUIDField(primary_key = True, help_text = '')
-	user = ForeignKeyField(User, help_text = '')
-	revoked = BooleanField(index = True, help_text = '')
-	authoraize_date = DateTimeField(index = True, help_text = '')
-	revoke_date = DateTimeField(index = True, help_text = '')
+	"""Выданные токены авторизации"""
+	id = UUIDField(primary_key = True, help_text = 'Токен')
+	user = ForeignKeyField(User, help_text = 'Пользователь, которому был выдан токен')
+	revoked = BooleanField(index = True, help_text = 'Был ли токен отозван')
+	authoraize_date = DateTimeField(index = True, help_text = 'Дата создания токена')
+	revoke_date = DateTimeField(index = True, help_text = 'Дата отзыва токена')
