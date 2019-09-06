@@ -18,10 +18,12 @@ def _get_description(cls):
 
 def migration(id, name = None):
     def migration_class_wrapper(cls):
+        nonlocal id
         #Database
         cls.db = Database.get()
         # Fields
-        # TODO: [OOKAMI] Check for uuid
+        if isinstance(id, str):
+            id = uuid.UUID(id)
         cls.migration_id = id
         if name:
             cls.name = name

@@ -18,19 +18,24 @@ class Migration:
 
 	@staticmethod
 	def _do_update():
+		reason = 'Updating database'
 		current_status = Migration._get_current_status()
 		list = get_migration_list()
 		list_ids = [m.get_migration_id() for m in list]
 		while len(current_status):
-			# TODO: Remove first elements from all lists, while ids are equals, except the last one
-			pass
+			if current_status[0] == list_ids[0]:
+				current_status.pop(0)
+				list.pop(0)
+				list_ids.pop(0)
+			else:
+				break
 		if len(current_status):
-			# TODO: Downgrade database to transaction in first element in list
-			# TODO: Remove the first element in list
-			pass
-		# TODO: Upgrade database by list
+			while len(current_status):
+				m_id = current_status.pop()
+				m = get_migration_by_id(m_id)
+				Migration._migrate(m, False, reason)
 		for migration in list:
-			Migration._migrate(migration, True, 'Updating database')
+			Migration._migrate(migration, True, reason)
 
 	@staticmethod
 	def _get_current_status():
@@ -39,7 +44,7 @@ class Migration:
 		current_status = []
 		prev_migration_id = None
 		for migration in migrations:
-			id = migration.migration
+			id = migration.target_migration
 			if prev_migration_id == id:
 				current_status.pop()
 			else:
