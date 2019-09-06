@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from .base import migration
-import uuid
+
 from db.scheme.master import Master
 from db.scheme.cluster import Cluster
 from db.scheme.user import User
@@ -15,6 +15,8 @@ class SystemMigration:
 		Master, Cluster, User, Organization,
 		EntityLog, Token
 	]
+
+    description = 'Содержит в себе базовые таблицы системы'
 
     def up(self):
         self.db.create_tables(self._tables)

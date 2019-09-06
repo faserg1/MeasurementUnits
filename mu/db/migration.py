@@ -22,7 +22,9 @@ class Migration:
 		current_status = Migration._get_current_status()
 		list = get_migration_list()
 		list_ids = [m.get_migration_id() for m in list]
-		while len(current_status):
+		print(list_ids)
+		print(current_status)
+		while len(current_status) and len(list_ids):
 			if current_status[0] == list_ids[0]:
 				current_status.pop(0)
 				list.pop(0)
@@ -42,12 +44,11 @@ class Migration:
 		print('Fetching migrations')
 		migrations = Migration._fetch_migration_list()
 		current_status = []
-		prev_migration_id = None
 		for migration in migrations:
-			id = migration.target_migration
-			if prev_migration_id == id:
+			if not migration.up:
 				current_status.pop()
 			else:
+				id = migration.target_migration
 				current_status.append(id)
 		return current_status
 
@@ -57,7 +58,8 @@ class Migration:
 		id = migration.get_migration_id()
 		name = migration.get_name()
 		description = migration.get_description()
-		print('Migrating ' + ('to' if up else 'from') + '.')
+		migration_direction_str = 'to' if up else 'from'
+		print('Migrating ' + migration_direction_str + ' "' + name + '".')
 		if reason:
 			print('Reason: "' + reason + '"')
 		else:

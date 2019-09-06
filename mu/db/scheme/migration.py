@@ -9,7 +9,7 @@ class Migration(Model):
 	"""Модель для сохранения историй миграций"""
 	id = UUIDField(primary_key = True, help_text = 'Идентификатор выполения миграции')
 	from_migration = UUIDField(null = True, index = True, help_text = 'Идентификатор предыдущей миграции')
-	target_migration = UUIDField(index = True, help_text = 'Идентификатор целевой миграции')
+	target_migration = UUIDField(null = True, index = True, help_text = 'Идентификатор целевой миграции')
 	up = BooleanField(index = True, help_text = 'Поднималась или опускалась миграция')
 	timestamp = DateTimeField(index = True, help_text = 'Время выполнения миграции')
 	name = CharField(index = True, max_length = 1024, help_text = 'Наименование миграции')
@@ -32,7 +32,7 @@ class Migration(Model):
 				return None
 			of_migration = current
 		q = Migration.select().where(
-			up = True, target_migration = of_migration).order_by(
+			Migration.up == True, Migration.target_migration == of_migration).order_by(
 			-Migration.timestamp).limit(1)
 		if not len(q):
 			return None
