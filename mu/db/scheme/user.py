@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import uuid
 from peewee import UUIDField, CharField
 from .model import Model
 
@@ -16,3 +17,17 @@ class User(Model):
 		if org_id:
 			q = q.where(User.orgs == org_id)
 		return q.objects()
+
+	@staticmethod
+	def username_exists(username):
+		return User.select().where(User.username == username).count()
+
+	@staticmethod
+	def email_exists(email):
+		return User.select().where(User.email == email).count()
+
+	@staticmethod
+	def create(username, email, hashed_password):
+		id = uuid.uuid4()
+		User.insert(id = id, username = username,
+			hashed_password = hashed_password, email = email).execute()

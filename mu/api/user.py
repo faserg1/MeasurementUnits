@@ -17,7 +17,8 @@ class User(object):
             # TODO: [OOKAMI] Check for rights
             return {'users': users, 'count': len(users)}
         def POST():
-            pass
+            body = cherrypy.request.body_readed
+            UserControl.create_user(body['username'], body['email'], body['password'])
         def default():
             pass
         return invoke_by_method([GET, POST], default)

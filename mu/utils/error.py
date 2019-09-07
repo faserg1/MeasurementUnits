@@ -32,6 +32,10 @@ class NotFoundError(Error):
     def __init__(self, body):
         super().__init__(404, body)
 
+class ConflictError(Error):
+    def __init__(self, body):
+        super().__init__(409, body)
+
 def handle_error():
     type, ex, traceback = sys.exc_info()
     if not issubclass(type, Error):

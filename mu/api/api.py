@@ -18,6 +18,7 @@ cherrypy.engine.subscribe('before_request', connect_to_db)
 cherrypy.engine.subscribe('after_request', close_db)
 
 cherrypy.config.update({'request.error_response': handle_error})
+cherrypy.config.update({'tools.trailing_slash.on': False})
 
 def serve():
 	cherrypy.engine.start()
