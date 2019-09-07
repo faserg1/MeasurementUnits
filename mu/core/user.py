@@ -9,10 +9,7 @@ class UserControl:
     def list_users(org_id = None):
         users = []
         users_obj = UserTable.list_users(org_id)
-        for user_obj in users_obj:
-            user = {'id': user_obj.id, 'username': user_obj.username,
-                'email': username.email}
-        return users
+        return [UserControl._convert_user(user_obj) for user_obj in users_obj]
 
     @staticmethod
     def create_user(username, email, password):
@@ -50,3 +47,8 @@ class UserControl:
                                       100000)
         pwdhash = binascii.hexlify(pwdhash).decode('ascii')
         return pwdhash == stored_password
+
+    @staticmethod
+    def _convert_user(user_obj):
+        return {'id': str(user_obj.id), 'username': user_obj.username,
+            'email': user_obj.email}

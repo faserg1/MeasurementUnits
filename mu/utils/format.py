@@ -19,6 +19,12 @@ def check_format(format):
 		return True
 	return False
 
+def check_body():
+	valid_methods = ['POST', 'PUT', 'PATCH']
+	return cherrypy.request.body and (
+		not hasattr(cherrypy.request, 'body_readed')) and (
+		cherrypy.request.method in valid_methods)
+
 def formattable():
 	def format_wrapper(func):
 		def func_wrapper(*args, **kwargs):
@@ -30,7 +36,7 @@ def formattable():
 				cherrypy.request.params['format'] = RequestFormat.JSON
 				raise ValueError('Wrong format')
 			#Formatting request body
-			if cherrypy.request.body and not hasattr(cherrypy.request, 'body_readed'):
+			if check_body():
 				body = cherrypy.request.body.read()
 				cherrypy.request.body_readed = format_from(body, format)
 			#Handling request
