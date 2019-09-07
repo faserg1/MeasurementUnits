@@ -32,6 +32,10 @@ class NotFoundError(Error):
     def __init__(self, body):
         super().__init__(404, body)
 
+class MethodNotAllowedError(Error):
+    def __init__(self, body):
+        super().__init__(405, body)
+
 class ConflictError(Error):
     def __init__(self, body):
         super().__init__(409, body)

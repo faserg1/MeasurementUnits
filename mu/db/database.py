@@ -10,7 +10,7 @@ class Database:
 	@classmethod
 	def init(cls):
 		"""Инициализация базы данных"""
-		cfg = Config.getDatabaseConfig()
+		cfg = Config.get_database_config()
 		db_name = cfg.pop('db_name', "mu")
 		psql_db = PostgresqlDatabase(db_name, **cfg)
 		cls.__database_proxy.initialize(psql_db)

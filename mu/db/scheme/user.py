@@ -27,6 +27,14 @@ class User(Model):
 		return User.select().where(User.email == email).count()
 
 	@staticmethod
+	def find_user(username_or_email):
+		q = User.select().where((User.username == username_or_email) |
+			(User.email == username_or_email)).limit(1).objects()
+		if not len(q):
+			return None
+		return q[0]
+
+	@staticmethod
 	def create(username, email, hashed_password):
 		id = uuid.uuid4()
 		User.insert(id = id, username = username,

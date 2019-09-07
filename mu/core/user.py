@@ -2,7 +2,7 @@
 
 import hashlib, binascii, os
 from db.scheme.user import User as UserTable
-from utils.error import ConflictError
+from utils.error import (NotFoundError, ConflictError)
 
 class UserControl:
     @staticmethod
@@ -20,6 +20,13 @@ class UserControl:
         if UserTable.email_exists(email):
             raise ConflictError({'error_msg': 'User with this email already exists'})
         UserTable.create(username, email, hashed_password)
+
+    @staticmethod
+    def validate_user(username_or_email, password):
+        user = UserTable.find_user(username_or_email)
+        if not user:
+            raise NotFoundError({'error_msg': 'User with provided username or email has not been found.'})
+        return UserControl._verify_password(user.hashed_password, password), user    
 
     @staticmethod
     def _get_password_static_salt():

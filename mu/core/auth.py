@@ -1,8 +1,23 @@
 #!/usr/bin/env python 3
 
+from datetime import datetime
 import cherrypy
 from core.master import MasterControl
+from core.user import UserControl
+from core.config import Config
+from db.scheme.token import Token
 from utils.error import (UnauthorizedError, ForbiddenError)
+
+class AuthControl:
+    @staticmethod
+    def authorize(username_or_email, password):
+        valid, user = UserControl.validate_user(username_or_email, password)
+        if not valid:
+            raise UnauthorizedError({'error_msg': 'Invalid password'})
+        token, revoke_date = Token.create_token(user, Config.get_revoke_in())
+        epoch = datetime.utcfromtimestamp(0)
+        return str(token), (revoke_date - epoch).total_seconds()
+
 # TODO: [OOKAMI] It must first check for master key, then on rights for current user
 # Request must have Auth header or smth
 
