@@ -18,9 +18,23 @@ class MasterControl:
 
     @staticmethod
     def check_key(key):
+        if not key:
+            raise BadRequestError({'error_msg': 'Ivalid Master-Key'})
         uuid_key = None
         try:
             uuid_key = uuid.UUID(key)
         except ValueError as e:
             raise BadRequestError({'error_msg': 'Ivalid Master-Key'})
         return MasterHelper.check(uuid_key)
+
+
+    @staticmethod
+    def revoke_key(key):
+        if not key:
+            raise BadRequestError({'error_msg': 'Ivalid Master-Key'})
+        uuid_key = None
+        try:
+            uuid_key = uuid.UUID(key)
+        except ValueError as e:
+            raise BadRequestError({'error_msg': 'Ivalid Master-Key'})
+        MasterHelper.revoke(uuid_key)

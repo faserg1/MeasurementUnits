@@ -24,3 +24,26 @@ class Token(Model):
 		Token.insert(id = id, user = user, revoked = False,
 			authoraize_date = auth_date, revoke_date = revoke_date).execute()
 		return id, revoke_date
+
+	@staticmethod
+	def validate(token):
+		with Token.atomic() as txn:
+			# TODO: Raise errors
+			token_record = Token.get(Token.id == token)
+			if not token_record:
+				return False
+			if token_record.revoked:
+				return False
+			if token_record.revoke_date < datetime.utcnow():
+				token_record.revoked = True
+				token_record.save()
+			return True
+
+	@staticmethod
+	def get_user(token):
+		with Token.atomic() as txn:
+			# TODO: Raise errors
+			token_record = Token.get(Token.id == token)
+			if not token_record:
+				return
+			return token_record.user

@@ -39,3 +39,4 @@ class User(Model):
 		id = uuid.uuid4()
 		User.insert(id = id, username = username,
 			hashed_password = hashed_password, email = email).execute()
+		return id

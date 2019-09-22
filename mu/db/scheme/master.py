@@ -56,7 +56,22 @@ class MasterHelper:
 			for key in keys:
 				if key.revoke_date and key.revoke_date < now:
 					key.revoked = True
+					key.revoke_date = datetime.utcnow()
 					key.save()
 				else:
 					master_mode = True
 		return master_mode
+
+	@staticmethod
+	def revoke(id):
+		with Master.atomic() as txn:
+			try:
+				key = Master[id]
+				if not key:
+					return False
+				key.revoked = True
+				key.revoke_date = datetime.utcnow()
+				key.save()
+				return True
+			except DoesNotExist as ex:
+				return False

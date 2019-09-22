@@ -40,6 +40,10 @@ class ConflictError(Error):
     def __init__(self, body):
         super().__init__(409, body)
 
+class InternalServerError(Error):
+    def __init__(self, body):
+        super().__init__(500, body)
+
 def handle_error():
     type, ex, traceback = sys.exc_info()
     if not issubclass(type, Error):

@@ -4,13 +4,16 @@ from datetime import datetime
 import cherrypy
 from core.master import MasterControl
 from core.user import UserControl
+from core.auth_helper import (get_auth, validate_auth_type, get_master_key, get_token, get_user_id)
 from core.config import Config
 from db.scheme.token import Token
-from utils.error import (UnauthorizedError, ForbiddenError)
+from utils.error import (BadRequestError, UnauthorizedError, ForbiddenError)
 
 class AuthControl:
     @staticmethod
     def authorize(username_or_email, password):
+        if MasterControl.is_master_mode():
+            raise ForbiddenError({'error_msg': 'Server is under maintance'})
         valid, user = UserControl.validate_user(username_or_email, password)
         if not valid:
             raise UnauthorizedError({'error_msg': 'Invalid password'})
@@ -35,20 +38,26 @@ def authable(mode = AuthMode.ALL):
                 return func(*args, **kwargs)
             def master_available():
                 return mode & AuthMode.MASTER and MasterControl.is_master_mode()
-            def get_auth():
-                if 'Authorization' not in cherrypy.request.headers:
-                    return
-                auth_header = cherrypy.request.headers['Authorization']
-                type, value = auth_header.split()
-                return {type: value}
             auth = get_auth()
             if not auth:
-                raise UnauthorizedError({'error_msg': 'No auth data present in request header'})
-            if master_available() and 'Master-Key' in auth:
+                raise UnauthorizedError({'error_msg': 'No Authorization header is present in request'})
+            if not validate_auth_type(auth):
+                raise BadRequestError({'error_msg': 'Invalid Authorization header'})
+            master_available = master_available()
+            if master_available and 'Master-Key' in auth:
                 if MasterControl.check_key(auth['Master-Key']):
                     return func(*args, **kwargs)
                 else:
                     raise ForbiddenError({'error_msg': 'Invalid Master-Key'})
+            elif master_available:
+                raise ForbiddenError({'error_msg': 'Cannot access resource while node is in master mode'})
+            elif 'Token' in auth and (mode & AuthMode.USER) or (mode & AuthMode.ORG):
+                token = auth['Token']
+                if not Token.validate(token):
+                    raise ForbiddenError({'error_msg': 'Invalid token or token has been expired'})
+                if not (mode & AuthMode.USER):
+                    # TODO: [OOKAMI] Validate organization exists
+                    pass
             else:
                 raise ForbiddenError({'error_msg': 'Permission denied'})
             return func(*args, **kwargs)

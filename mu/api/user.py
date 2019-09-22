@@ -4,12 +4,12 @@ import cherrypy
 from utils.format import formattable
 from utils.rest import invoke_by_method
 #from utils.error import
-from core.auth import authable
+from core.auth import (AuthMode, authable)
 from core.user import UserControl
 
 class User(object):
     @cherrypy.expose
-    @authable()
+    @authable(AuthMode.MASTER | AuthMode.ORG)
     @formattable()
     def index(self):
         def GET():

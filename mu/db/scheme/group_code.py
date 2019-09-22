@@ -10,7 +10,7 @@ class GroupCode(Model):
 	id = UUIDField(primary_key = True, help_text = 'Идентификатор кода группы')
 	group = ForeignKeyField(Group, backref = 'codes', help_text = 'Идентификатор группы')
 	standard = ForeignKeyField(Standard, backref = 'group_codes', help_text = 'Идентификатор стандарта')
-	code = CharField(max_length = 64, index = True, null = True, help_text = 'Код, приписанный типу в данном стандарте')
-	
+	code = CharField(max_length = 64, index = True, null = True, help_text = 'Код, приписанный группе в данном стандарте')
+
 	class Meta:
 		table_name = 'group_code'

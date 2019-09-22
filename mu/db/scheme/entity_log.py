@@ -20,7 +20,7 @@ class EntityLog(Model):
 	timestamp = DateTimeField(index = True, help_text = 'Время операции')
 	data = TextField(null = True, help_text = 'Допольнительные данные операции в формате JSON строки')
 	user_msg = TextField(null = True, help_text = 'Пользовательское сообщение')
-	
+
 	class Meta:
 	    table_name = 'entity_log'
 
@@ -34,11 +34,11 @@ class LogWriter:
 		with EntityLog.atomic() as txn:
 			EntityLog.insert(id = id, entity = entity_id, user = user, org = org,
 				master_key = master_key, mod_type = mod_type, timestamp = timestamp,
-				data = data, user_msg = msg)
+				data = data, user_msg = msg).execute()
 
 	@staticmethod
 	def push_as_master(entity_id, master_key, mod_type, data, msg):
-		return LogWriter.push(entity_id, None, None, master_key, mod_type,  data, msg)
+		return LogWriter.push(entity_id, None, None, master_key, mod_type, data, msg)
 
 	@staticmethod
 	def push_as_user(entity_id, user, org, mod_type, data, msg):
