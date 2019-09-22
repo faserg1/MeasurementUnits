@@ -51,7 +51,7 @@ def authable(mode = AuthMode.ALL):
                     raise ForbiddenError({'error_msg': 'Invalid Master-Key'})
             elif master_available:
                 raise ForbiddenError({'error_msg': 'Cannot access resource while node is in master mode'})
-            elif 'Token' in auth and (mode & AuthMode.USER) or (mode & AuthMode.ORG):
+            elif 'Token' in auth and ((mode & AuthMode.USER) or (mode & AuthMode.ORG)):
                 token = auth['Token']
                 if not Token.validate(token):
                     raise ForbiddenError({'error_msg': 'Invalid token or token has been expired'})

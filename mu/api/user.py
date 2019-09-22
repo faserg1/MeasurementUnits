@@ -3,7 +3,7 @@
 import cherrypy
 from utils.format import formattable
 from utils.rest import invoke_by_method
-#from utils.error import
+from utils.error import MethodNotAllowedError
 from core.auth import (AuthMode, authable)
 from core.user import UserControl
 
@@ -21,6 +21,5 @@ class User(object):
             body = cherrypy.request.body_readed
             UserControl.create_user(body['username'], body['email'], body['password'])
         def default():
-            # TODO: [OOKAMI] Raise method not allowed
-            pass
+            raise MethodNotAllowedError({'error_msg': 'Method not allowed'})
         return invoke_by_method([GET, POST], default)

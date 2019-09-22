@@ -10,6 +10,11 @@ class Privacy:
 	PROTECTED = 1
 	PRIVATE = 2
 
+class Role:
+	OWNER = 0
+	MAINTAINER = 1
+	MEMBER = 2
+
 class ClusterNodeType:
 	SIBLING = 0
 	PARENT = 1

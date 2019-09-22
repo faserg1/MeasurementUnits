@@ -3,6 +3,7 @@
 import cherrypy
 from utils.format import formattable
 from utils.rest import invoke_by_method
+from utils.error import MethodNotAllowedError
 from core.master import MasterControl
 from core.auth import (AuthMode, authable)
 from core.auth_helper import get_master_key
@@ -17,9 +18,8 @@ class Master(object):
         def DELETE():
             master_key = get_master_key()
             return MasterControl.revoke_key(master_key)
-            #TODO: [OOKAMI] Revoke master mode
         def default():
-            pass
+            raise MethodNotAllowedError({'error_msg': 'Method not allowed'})
         return invoke_by_method([GET, DELETE], default)
 
     def _cp_dispatch(self, vpath):
