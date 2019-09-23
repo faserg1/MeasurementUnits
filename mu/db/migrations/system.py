@@ -2,7 +2,6 @@
 
 from .base import migration
 
-from db.scheme.master import Master
 from db.scheme.cluster import Cluster
 from db.scheme.user import User
 from db.scheme.org import Organization
@@ -14,7 +13,7 @@ from db.scheme.token import Token
 @migration('c6cd1eae-d66a-4862-bb58-cf3c3f79162f')
 class SystemMigration:
     _tables = [
-		Master, Cluster, User, Organization,
+		Cluster, User, Organization,
         UserInfo, UserOrganization,
 		EntityLog, Token
 	]
