@@ -34,8 +34,10 @@ class Token(Model):
 					return False
 				if token_record.revoked:
 					return False
-				if token_record.revoke_date < datetime.utcnow():
+				now = datetime.utcnow()
+				if token_record.revoke_date < now:
 					token_record.revoked = True
+					token_record.revoke_date = now
 					token_record.save()
 				return True
 			except DoesNotExist:
@@ -51,3 +53,28 @@ class Token(Model):
 				return token_record.user
 			except DoesNotExist:
 				return
+
+	@staticmethod
+	def get_info(token):
+		with Token.atomic() as txn:
+			try:
+				token_record = Token[token]
+				if not token_record:
+					return
+				return token_record
+			except DoesNotExist:
+				return
+
+	@staticmethod
+	def revoke(token):
+		with Token.atomic() as txn:
+			try:
+				token_record = Token[token]
+				if not token_record:
+					return False
+				token_record.revoked = True
+				token_record.revoke_date = datetime.utcnow()
+				token_record.save()
+				return True
+			except DoesNotExist:
+				return False

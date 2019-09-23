@@ -7,6 +7,9 @@ import uuid
 class MasterControl:
     @staticmethod
     def setup():
+        if not MasterTable.table_exists():
+            print("Master table does not exists!")
+            return
         if not MasterHelper.has_keys():
             print("First start...")
             key = MasterHelper.create()
@@ -14,6 +17,9 @@ class MasterControl:
 
     @staticmethod
     def is_master_mode():
+        if not MasterTable.table_exists():
+            print("Master table does not exists!")
+            return True
         return MasterHelper.is_master_mode()
 
     @staticmethod

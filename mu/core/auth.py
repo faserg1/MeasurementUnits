@@ -7,7 +7,8 @@ from core.user import UserControl
 from core.auth_helper import (get_auth, validate_auth_type, get_master_key, get_token, get_user_id)
 from core.config import Config
 from db.scheme.token import Token
-from utils.error import (BadRequestError, UnauthorizedError, ForbiddenError)
+from utils.error import (BadRequestError, UnauthorizedError, ForbiddenError, NotFoundError)
+from utils.time import get_utc_seconds
 
 class AuthControl:
     @staticmethod
@@ -18,8 +19,12 @@ class AuthControl:
         if not valid:
             raise UnauthorizedError({'error_msg': 'Invalid password'})
         token, revoke_date = Token.create_token(user, Config.get_revoke_in())
-        epoch = datetime.utcfromtimestamp(0)
-        return str(token), (revoke_date - epoch).total_seconds()
+        return str(token), get_utc_seconds(revoke_date)
+
+    @staticmethod
+    def revoke_token(token_id):
+        if not Token.revoke(token_id):
+            raise NotFoundError({'error_msg': 'Token not found'})
 
 # TODO: [OOKAMI] It must first check for master key, then on rights for current user
 # Request must have Auth header or smth

@@ -2,6 +2,7 @@
 
 import cherrypy
 from db.scheme.token import Token
+from utils.time import get_utc_seconds
 
 def get_auth():
     if 'Authorization' not in cherrypy.request.headers:
@@ -38,3 +39,8 @@ def get_user_id():
     if not token:
         return
     return Token.get_user(token).id
+
+def get_token_info(token_id):
+    info = Token.get_info(token_id)
+    return {'id': str(info.id), 'user_id': str(info.user.id), 'revoked': info.revoked,
+        'authoraize_date': get_utc_seconds(info.authoraize_date), 'revoke_date': get_utc_seconds(info.revoke_date)}
