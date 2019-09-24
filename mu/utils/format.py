@@ -47,5 +47,7 @@ def formattable():
 				cherrypy.response.headers['Content-Type'] = content_type
 				return body
 			return None
+		func_wrapper.__name__ = func.__name__
+		func_wrapper.__doc__ = func.__doc__
 		return func_wrapper
 	return format_wrapper

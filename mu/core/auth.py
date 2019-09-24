@@ -66,5 +66,7 @@ def authable(mode = AuthMode.ALL):
             else:
                 raise ForbiddenError({'error_msg': 'Permission denied'})
             return func(*args, **kwargs)
+        handler_wrapper.__name__ = func.__name__
+        handler_wrapper.__doc__ = func.__doc__
         return handler_wrapper
     return wrapper

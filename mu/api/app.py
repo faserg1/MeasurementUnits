@@ -5,17 +5,19 @@ from utils.format import formattable
 from utils.error import NotFoundError
 from .master import Master
 from .user import User
-from .units import Units
-from .org import Organization
 from .auth import Auth
+from .org import Organization
+from .lang import Language
+from .units import Units
 
 class App(object):
 	def __init__(self):
 		self.master = Master()
 		self.user = User()
-		self.units = Units()
-		self.org = Organization()
 		self.auth = Auth()
+		self.org = Organization()
+		self.units = Units()
+		self.lang = Language()
 
 	def _cp_dispatch(self, vpath):
 		if len(vpath) == 0:
@@ -26,12 +28,15 @@ class App(object):
 		elif vpath[0] == 'user':
 			vpath.pop(0)
 			return self.user
-		elif vpath[0] == 'org':
-			vpath.pop(0)
-			return self.org
 		elif vpath[0] == 'auth':
 			vpath.pop(0)
 			return self.auth
+		elif vpath[0] == 'org':
+			vpath.pop(0)
+			return self.org
+		elif vpath[0] == 'lang':
+			vpath.pop(0)
+			return self.lang
 		elif vpath[0] == 'units':
 			vpath.pop(0)
 			return self.units
@@ -40,7 +45,7 @@ class App(object):
 	@cherrypy.expose
 	@formattable()
 	def index(self, *args, **kwargs):
-		return {"luck": True}
+		return {}
 
 	@cherrypy.expose
 	@formattable()

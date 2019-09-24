@@ -14,10 +14,11 @@ class Master(object):
 
     @cherrypy.expose
     @formattable()
-    @authable(AuthMode.MASTER)
     def index(self):
+        @authable(AuthMode.MASTER | AuthMode.USER | AuthMode.ORG)
         def GET():
             return {"enabled": MasterControl.is_master_mode()}
+        @authable(AuthMode.MASTER)
         def DELETE():
             master_key = get_master_key()
             return MasterControl.revoke_key(master_key)
