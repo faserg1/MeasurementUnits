@@ -14,7 +14,7 @@ class AuthControl:
     @staticmethod
     def authorize(username_or_email, password):
         if MasterControl.is_master_mode():
-            raise ForbiddenError({'error_msg': 'Server is under maintance'})
+            raise ForbiddenError({'error_msg': 'Server is under maintenance'})
         valid, user = UserControl.validate_user(username_or_email, password)
         if not valid:
             raise UnauthorizedError({'error_msg': 'Invalid password'})

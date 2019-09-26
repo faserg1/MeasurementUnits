@@ -19,9 +19,14 @@ class Language:
         @authable(AuthMode.MASTER)
         def POST():
             if not len(args):
-                body = cherrypy.request.body_readed
-                name = body['name']
-                own_name = body['own_name']
+                try:
+                    with BodyReader() as body:
+                        name = body['name']
+                        own_name = body['own_name']
+                except MultiKeyError as ex:
+                    paths = ex.get_error_paths()
+                    keys = {'paths': paths, 'count': len(paths)}
+                    raise BadRequestError({'error_msg': 'Request body is not full', 'keys': keys})
                 if not len(name) or not len(own_name):
                     raise BadRequestError({'error_msg': 'Cannot create language with empty name',
                         'name': name, 'own_name': own_name})

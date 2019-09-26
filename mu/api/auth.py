@@ -5,15 +5,21 @@ from core.auth import AuthControl
 from utils.format import formattable
 from utils.rest import invoke_by_method
 from utils.error import MethodNotAllowedError
+from utils.body_reader import (BodyReader, MultiKeyError)
 
 class Auth:
     @cherrypy.expose
     @formattable()
     def login(self, *args, **kwargs):
         def POST():
-            body = cherrypy.request.body_readed
-            username = body['username']
-            password = body['password']
+            try:
+                with BodyReader() as body:
+                    username = body['username']
+                    password = body['password']
+            except MultiKeyError as ex:
+                paths = ex.get_error_paths()
+                keys = {'paths': paths, 'count': len(paths)}
+                raise BadRequestError({'error_msg': 'Request body is not full', 'keys': keys})
             token, revoke_date = AuthControl.authorize(username, password)
             return {'token': token, 'expired_at': revoke_date}
         def default():

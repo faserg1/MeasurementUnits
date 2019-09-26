@@ -4,6 +4,7 @@ import cherrypy
 from utils.format import formattable
 from utils.error import NotFoundError
 from .master import Master
+from core.master import MasterControl
 from .user import User
 from .auth import Auth
 from .org import Organization
@@ -44,8 +45,8 @@ class App(object):
 
 	@cherrypy.expose
 	@formattable()
-	def index(self, *args, **kwargs):
-		return {}
+	def index(self):
+		return {'maintenance': MasterControl.is_master_mode()}
 
 	@cherrypy.expose
 	@formattable()

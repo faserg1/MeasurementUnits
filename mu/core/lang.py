@@ -2,11 +2,15 @@
 
 from db.scheme.lang import Language
 from db.scheme.lang_code import LanguageCode
+from db.scheme.entity_log import LogWriter
+from core.auth_helper import get_master_key
+from core.const import EntityLogModifyType
 
 class LanguageControl:
     @staticmethod
     def create(name, own_name):
         id = Language.add_lang(name, own_name)
+        LogWriter.push_as_master(id, get_master_key(), EntityLogModifyType.CREATE, None, None)
         return {'id': str(id)}
 
     @staticmethod

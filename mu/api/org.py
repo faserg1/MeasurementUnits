@@ -15,7 +15,13 @@ class Organization(object):
         def GET():
             pass
         def POST():
-            local_name = cherrypy.request.body_readed['local_name']
+            try:
+                with BodyReader() as body:
+                    local_name = body['local_name']
+            except MultiKeyError as ex:
+                paths = ex.get_error_paths()
+                keys = {'paths': paths, 'count': len(paths)}
+                raise BadRequestError({'error_msg': 'Request body is not full', 'keys': keys})
             return OrganizationControl.create(local_name)
         def default():
             raise MethodNotAllowedError({'error_msg': 'Method not allowed'})

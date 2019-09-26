@@ -18,8 +18,16 @@ class User(object):
             # TODO: [OOKAMI] Check for rights
             return {'users': users, 'count': len(users)}
         def POST():
-            body = cherrypy.request.body_readed
-            UserControl.create_user(body['username'], body['email'], body['password'])
+            try:
+                with BodyReader() as body:
+                    username = body['username']
+                    password = body['password']
+                    email = body['email']
+            except MultiKeyError as ex:
+                paths = ex.get_error_paths()
+                keys = {'paths': paths, 'count': len(paths)}
+                raise BadRequestError({'error_msg': 'Request body is not full', 'keys': keys})
+            UserControl.create_user(username, email, password)
         def default():
             raise MethodNotAllowedError({'error_msg': 'Method not allowed'})
         return invoke_by_method([GET, POST], default)
