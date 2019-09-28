@@ -10,8 +10,8 @@ class UnitName(Model):
 	id = UUIDField(column_name = 'id', primary_key = True, help_text = 'Идентификатор наименования единицы измерения')
 	unit = ForeignKeyField(Unit, backref='names', help_text = 'Идентификатор единицы измерения')
 	lang = ForeignKeyField(Language, help_text = 'Идентификатор языка')
-	short_name = CharField(max_length = 32, help_text = 'Краткое наименование единицы измерения')
-	full_name = CharField(max_length = 256, help_text = 'Полное наименование единицы измерения')
+	short_name = CharField(max_length = 32, index = True, help_text = 'Краткое наименование единицы измерения')
+	full_name = CharField(max_length = 256, index = True, help_text = 'Полное наименование единицы измерения')
 	description = TextField(help_text = 'Описание единицы измерения')
 
 	class Meta:

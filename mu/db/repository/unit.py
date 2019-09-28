@@ -51,5 +51,11 @@ class UnitRepository:
         return q
 
     @staticmethod
+    def search_for_user(user_id, search_query):
+        q = UnitRepository.list_for_user(user_id, True)
+        q = q.where((UnitName.full_name % search_query) | (UnitName.full_name % search_query))
+        return q
+
+    @staticmethod
     def atomic():
         return Unit.atomic()

@@ -2,6 +2,7 @@
 
 from db.repository.lang import LanguageRepository
 from db.repository.entity_log import LogWriter
+from core.mapper.lang import LanguageMapper
 from core.auth_helper import get_master_key
 from core.const import EntityLogModifyType
 
@@ -20,14 +21,7 @@ class LanguageControl:
     @staticmethod
     def get_all(include_codes = False):
         langs = LanguageRepository.list_all()
-        count = len(langs)
-        parsed = []
-        if count:
-            for lang in langs:
-                lang_parsed = {'id': str(lang.id), 'name': lang.name, 'own_name': lang.own_name}
-                if include_codes:
-                    pass
-                parsed.append(lang_parsed)
+        langs_mapped = [LanguageMapper.map_lang(lang, include_codes) for lang in langs]
         return {'count': count, 'langs': parsed}
 
     @staticmethod

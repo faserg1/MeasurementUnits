@@ -5,6 +5,7 @@ from utils.format import formattable
 from utils.rest import invoke_by_method
 from utils.error import (BadRequestError, NotFoundError, MethodNotAllowedError)
 from utils.body_reader import (BodyReader, MultiKeyError)
+from utils.query import QueryHelper
 from core.auth import (AuthMode, authable)
 from core.units import UnitsControl
 
@@ -15,8 +16,10 @@ class Units:
     def default(self, *args, **kwargs):
         def GET():
             if not len(args):
-                with_names = 'names' in kwargs and (
-                    kwargs['names'].lower() == 'true' or kwargs['names'] == '1')
+                with_names = QueryHelper.get_bool('names', kwargs)
+                search_query = QueryHelper.get_string('search', kwargs)
+                if search_query:
+                    return UnitsControl.search_units(search_query)
                 return UnitsControl.get_units(with_names)
             raise NotFoundError({'error_msg': 'Resource not found'})
         def POST():

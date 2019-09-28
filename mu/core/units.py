@@ -4,6 +4,7 @@ import uuid
 from datetime import datetime
 from db.repository.unit import UnitRepository
 from db.repository.entity_log import LogWriter
+from core.mapper.unit import UnitMapper
 from core.auth_helper import get_user_id
 from core.const import (EntityLogModifyType, Privacy)
 
@@ -40,28 +41,12 @@ class UnitsControl:
     def get_units(with_names = False):
         user_id = get_user_id()
         units = UnitRepository.list_for_user(user_id, with_names)
-        units_parsed = []
-        for unit in units:
-            unit_parsed = {
-                'id': str(unit.id),
-                'maintenance': unit.maintenance
-            }
-            if unit.maintenance:
-                unit_parsed['maintenance_reason'] = unit.maintenance_reason
-            if with_names:
-                names_parsed = []
-                for name in unit.names:
-                    name_parsed = {
-                        'id': str(name.id),
-                        'lang': str(name.lang.id),
-                        'full_name': name.short_name,
-                        'short_name': name.full_name,
-                        'description': name.description
-                    }
-                    names_parsed.append(name_parsed)
-                name_count = len(names_parsed)
-                unit_parsed['name_count'] = name_count
-                if len(names_parsed):
-                    unit_parsed['names'] = names_parsed
-            units_parsed.append(unit_parsed)
-        return {'units': units_parsed, 'count': len(units_parsed)}
+        units_mapped = [UnitMapper.map_unit(unit) for unit in units]
+        return {'units': units_mapped, 'count': len(units_mapped)}
+
+    @staticmethod
+    def search_units(search_query):
+        user_id = get_user_id()
+        units = UnitRepository.search_for_user(user_id, search_query)
+        units_mapped = [UnitMapper.map_unit(unit) for unit in units]
+        return {'units': units_mapped, 'count': len(units_mapped)}
