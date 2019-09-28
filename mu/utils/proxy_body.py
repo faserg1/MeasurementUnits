@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
 
 class ProxyBody:
-    _reader = None
-    _parent = None
-    _key = None
-    _value = None
-    _has_value = False
-
     def __init__(self, reader, parent, key, value, has_value):
         self._reader = reader
         self._parent = parent

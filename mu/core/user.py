@@ -29,6 +29,7 @@ class UserControl:
             raise InternalServerError({'error_msg': 'Non master key usage creating is not implemented right now'})
         id = UserTable.create(username, email, hashed_password)
         LogWriter.push_as_master(id, master_key, EntityLogModifyType.CREATE, None, None)
+        return {'id': str(id)}
 
     @staticmethod
     def validate_user(username_or_email, password):

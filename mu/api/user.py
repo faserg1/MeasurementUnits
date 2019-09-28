@@ -3,7 +3,8 @@
 import cherrypy
 from utils.format import formattable
 from utils.rest import invoke_by_method
-from utils.error import MethodNotAllowedError
+from utils.error import (BadRequestError, MethodNotAllowedError)
+from utils.body_reader import (BodyReader, MultiKeyError)
 from core.auth import (AuthMode, authable)
 from core.user import UserControl
 
@@ -27,7 +28,7 @@ class User(object):
                 paths = ex.get_error_paths()
                 keys = {'paths': paths, 'count': len(paths)}
                 raise BadRequestError({'error_msg': 'Request body is not full', 'keys': keys})
-            UserControl.create_user(username, email, password)
+            return UserControl.create_user(username, email, password)
         def default():
             raise MethodNotAllowedError({'error_msg': 'Method not allowed'})
         return invoke_by_method([GET, POST], default)
