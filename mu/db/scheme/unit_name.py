@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import uuid
 from peewee import UUIDField, CharField, TextField, ForeignKeyField
 from .model import Model
 from .unit import Unit
@@ -17,11 +16,3 @@ class UnitName(Model):
 
 	class Meta:
 		table_name = 'unit_name'
-
-	@staticmethod
-	def add_name(unit, lang, short, full, desc):
-		id = uuid.uuid4()
-		with UnitName.atomic() as txn:
-			UnitName.insert(id = id, unit = unit, lang = lang,
-				short_name = short, full_name = full, description = desc).execute()
-			return id

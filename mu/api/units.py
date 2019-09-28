@@ -14,7 +14,9 @@ class Units:
     @authable(AuthMode.USER | AuthMode.ORG)
     def default(self, *args, **kwargs):
         def GET():
-            pass
+            if not len(args):
+                return UnitsControl.get_units()
+            raise NotFoundError({'error_msg': 'Resource not found'})
         def POST():
             if not len(args):
                 return UnitsControl.create_unit()

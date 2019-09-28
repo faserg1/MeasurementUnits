@@ -2,8 +2,8 @@
 
 import hashlib, binascii, os
 from datetime import datetime
-from db.scheme.user import User as UserTable
-from db.scheme.entity_log import LogWriter
+from db.repository.user import UserRepository
+from db.repository.entity_log import LogWriter
 from core.auth_helper import get_master_key
 from core.const import EntityLogModifyType
 from utils.error import (NotFoundError, ConflictError, InternalServerError)
@@ -12,28 +12,32 @@ class UserControl:
     @staticmethod
     def list_users(org_id = None):
         users = []
-        users_obj = UserTable.list_users(org_id)
+        users_obj = UserRepository.list_users(org_id)
         return [UserControl._convert_user(user_obj) for user_obj in users_obj]
 
     @staticmethod
     def create_user(username, email, password):
         date = datetime.utcnow()
         hashed_password = UserControl._hash_password(password)
-        #TODO: [OOKAMI] Check username & email in cluster mode
-        if UserTable.username_exists(username):
+        if UserRepository.username_exists(username):
             raise ConflictError({'error_msg': 'User with this username already exists'})
-        if UserTable.email_exists(email):
+        if UserRepository.email_exists(email):
             raise ConflictError({'error_msg': 'User with this email already exists'})
         master_key = get_master_key()
         if not master_key:
             raise InternalServerError({'error_msg': 'Non master key usage creating is not implemented right now'})
-        id = UserTable.create(username, email, hashed_password)
-        LogWriter.push_as_master(id, master_key, EntityLogModifyType.CREATE, None, None)
-        return {'id': str(id)}
+        with UserRepository.atomic() as txn:
+            try:
+                id = UserRepository.create_user(username, email, hashed_password)
+                LogWriter.push_as_master(id, master_key, EntityLogModifyType.CREATE, None, None)
+                return {'id': str(id)}
+            except Exception as ex:
+                txn.rollback()
+                raise ex
 
     @staticmethod
     def validate_user(username_or_email, password):
-        user = UserTable.find_user(username_or_email)
+        user = UserRepository.find_user(username_or_email)
         if not user:
             raise NotFoundError({'error_msg': 'User with provided username or email has not been found.'})
         return UserControl._verify_password(user.hashed_password, password), user

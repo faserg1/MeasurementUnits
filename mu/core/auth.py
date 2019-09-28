@@ -1,6 +1,7 @@
 #!/usr/bin/env python 3
 
 from datetime import datetime
+import uuid
 import cherrypy
 from core.master import MasterControl
 from core.user import UserControl
@@ -20,6 +21,17 @@ class AuthControl:
             raise UnauthorizedError({'error_msg': 'Invalid password'})
         token, revoke_date = Token.create_token(user, Config.get_revoke_in())
         return str(token), get_utc_seconds(revoke_date)
+
+    @staticmethod
+    def check_token(token):
+        if not token:
+            raise BadRequestError({'error_msg': 'Ivalid Token'})
+        uuid_token = None
+        try:
+            uuid_token = uuid.UUID(token)
+        except ValueError as e:
+            raise BadRequestError({'error_msg': 'Ivalid Token'})
+        return Token.validate(token)
 
     @staticmethod
     def revoke_token(token_id):
@@ -58,7 +70,7 @@ def authable(mode = AuthMode.ALL):
                 raise ForbiddenError({'error_msg': 'Cannot access resource while node is in master mode'})
             elif 'Token' in auth and ((mode & AuthMode.USER) or (mode & AuthMode.ORG)):
                 token = auth['Token']
-                if not Token.validate(token):
+                if not AuthControl.check_token(token):
                     raise ForbiddenError({'error_msg': 'Invalid token or token has been expired'})
                 if not (mode & AuthMode.USER):
                     # TODO: [OOKAMI] Validate organization exists

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import uuid
 from peewee import UUIDField, ForeignKeyField, SmallIntegerField
 from .model import Model
 from .org import Organization
@@ -15,9 +14,3 @@ class UserOrganization(Model):
 
 	class Meta:
 		table_name = 'user_org'
-
-	@staticmethod
-	def add(org, user, role):
-		id = uuid.uuid4()
-		UserOrganization.insert(id = id, org = org, user = user, role = role).execute()
-		return id
