@@ -8,9 +8,9 @@ from .standard import Standard
 class UnitCode(Model):
 	"""Наименование и описание единицы измерения"""
 	id = UUIDField(column_name = 'id', primary_key = True, help_text = 'Идентификатор наименования единицы измерения')
-	unit = ForeignKeyField(Unit, backref='names', help_text = 'Идентификатор единицы измерения')
+	unit = ForeignKeyField(Unit, backref='codes', help_text = 'Идентификатор единицы измерения')
 	standard = ForeignKeyField(Standard, backref = 'unit_codes', help_text = 'Идентификатор стандарта')
 	code = CharField(max_length = 64, index = True, null = True, help_text = 'Код, приписанный единице измерения в данном стандарте')
-	
+
 	class Meta:
 		table_name = 'unit_code'

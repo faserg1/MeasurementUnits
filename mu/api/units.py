@@ -15,7 +15,9 @@ class Units:
     def default(self, *args, **kwargs):
         def GET():
             if not len(args):
-                return UnitsControl.get_units()
+                with_names = 'names' in kwargs and (
+                    kwargs['names'].lower() == 'true' or kwargs['names'] == '1')
+                return UnitsControl.get_units(with_names)
             raise NotFoundError({'error_msg': 'Resource not found'})
         def POST():
             if not len(args):

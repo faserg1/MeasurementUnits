@@ -37,7 +37,31 @@ class UnitsControl:
                 raise ex
 
     @staticmethod
-    def get_units():
+    def get_units(with_names = False):
         user_id = get_user_id()
-        units = UnitRepository.list_for_user(user_id)
-        return []
+        units = UnitRepository.list_for_user(user_id, with_names)
+        units_parsed = []
+        for unit in units:
+            unit_parsed = {
+                'id': str(unit.id),
+                'maintenance': unit.maintenance
+            }
+            if unit.maintenance:
+                unit_parsed['maintenance_reason'] = unit.maintenance_reason
+            if with_names:
+                names_parsed = []
+                for name in unit.names:
+                    name_parsed = {
+                        'id': str(name.id),
+                        'lang': str(name.lang.id),
+                        'full_name': name.short_name,
+                        'short_name': name.full_name,
+                        'description': name.description
+                    }
+                    names_parsed.append(name_parsed)
+                name_count = len(names_parsed)
+                unit_parsed['name_count'] = name_count
+                if len(names_parsed):
+                    unit_parsed['names'] = names_parsed
+            units_parsed.append(unit_parsed)
+        return {'units': units_parsed, 'count': len(units_parsed)}

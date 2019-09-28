@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import uuid
+from peewee import JOIN
 from db.scheme.unit import Unit
 from db.scheme.unit_name import UnitName
 from db.scheme.unit_ownership_user import UnitOwnershipUser
@@ -36,13 +37,18 @@ class UnitRepository:
     	return id
 
     @staticmethod
-    def list_for_user(user_id):
-        q = Unit.select(Unit, UnitOwnershipUser, UnitOwnershipOrganizaton)
-        q = q.join(UnitOwnershipUser).switch(Unit).join(UnitOwnershipOrganizaton).switch(Unit)
+    def list_for_user(user_id, with_names):
+        to_select = [Unit]
+        if with_names:
+            to_select.append(UnitName)
+        q = Unit.select(*to_select)
+        if with_names:
+            q = q.join(UnitName, JOIN.LEFT_OUTER).switch(Unit)
+        q = q.join(UnitOwnershipUser, JOIN.LEFT_OUTER).switch(Unit).join(UnitOwnershipOrganizaton, JOIN.LEFT_OUTER).switch(Unit)
         q = q.where((UnitOwnershipUser.user == user_id) |
-            (UnitOwnershipUser.privacy == Privacy.PUBLIC & Unit.maintenance == False) |
-            (UnitOwnershipOrganizaton.privacy == Privacy.PUBLIC & Unit.maintenance == False))
-        return q.objects()
+            ((UnitOwnershipUser.privacy == Privacy.PUBLIC) & (Unit.maintenance == False)) |
+            ((UnitOwnershipOrganizaton.privacy == Privacy.PUBLIC) & (Unit.maintenance == False)))
+        return q
 
     @staticmethod
     def atomic():

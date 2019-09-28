@@ -6,9 +6,6 @@ from .user import User
 from .org import Organization
 from .master import Master
 
-from datetime import datetime
-import uuid
-
 class EntityLog(Model):
 	"""Лог системы"""
 	id = UUIDField(primary_key = True, help_text = 'Идентификатор записи лога')

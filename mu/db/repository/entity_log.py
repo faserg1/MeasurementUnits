@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import uuid
+from datetime import datetime
 from db.scheme.entity_log import EntityLog
 
 class LogWriter:
