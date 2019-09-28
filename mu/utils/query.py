@@ -10,3 +10,8 @@ class QueryHelper:
     def get_string(name, kwargs):
         if name in kwargs:
             return str(kwargs[name])
+
+    @staticmethod
+    def get_int(name, kwargs):
+        if name in kwargs:
+            return int(kwargs[name])

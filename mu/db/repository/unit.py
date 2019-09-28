@@ -37,7 +37,7 @@ class UnitRepository:
     	return id
 
     @staticmethod
-    def list_for_user(user_id, with_names):
+    def list_for_user(user_id, with_names, in_maintenance = -1):
         to_select = [Unit]
         if with_names:
             to_select.append(UnitName)
@@ -46,13 +46,17 @@ class UnitRepository:
             q = q.join(UnitName, JOIN.LEFT_OUTER).switch(Unit)
         q = q.join(UnitOwnershipUser, JOIN.LEFT_OUTER).switch(Unit).join(UnitOwnershipOrganizaton, JOIN.LEFT_OUTER).switch(Unit)
         q = q.where((UnitOwnershipUser.user == user_id) |
-            ((UnitOwnershipUser.privacy == Privacy.PUBLIC) & (Unit.maintenance == False)) |
-            ((UnitOwnershipOrganizaton.privacy == Privacy.PUBLIC) & (Unit.maintenance == False)))
+            ((UnitOwnershipUser.privacy == Privacy.PUBLIC) & (~Unit.maintenance)) |
+            ((UnitOwnershipOrganizaton.privacy == Privacy.PUBLIC) & (~Unit.maintenance)))
+        if in_maintenance < 0:
+            q = q.where(~Unit.maintenance)
+        elif in_maintenance > 0:
+            q = q.where(Unit.maintenance)
         return q
 
     @staticmethod
-    def search_for_user(user_id, search_query):
-        q = UnitRepository.list_for_user(user_id, True)
+    def search_for_user(user_id, search_query, in_maintenance = -1):
+        q = UnitRepository.list_for_user(user_id, True, in_maintenance)
         q = q.where((UnitName.full_name % search_query) | (UnitName.full_name % search_query))
         return q
 

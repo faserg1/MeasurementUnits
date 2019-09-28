@@ -16,11 +16,12 @@ class Units:
     def default(self, *args, **kwargs):
         def GET():
             if not len(args):
-                with_names = QueryHelper.get_bool('names', kwargs)
                 search_query = QueryHelper.get_string('search', kwargs)
+                in_maintenance = QueryHelper.get_int('in_maintenance', kwargs)
                 if search_query:
-                    return UnitsControl.search_units(search_query)
-                return UnitsControl.get_units(with_names)
+                    return UnitsControl.search_units(search_query, in_maintenance)
+                with_names = QueryHelper.get_bool('names', kwargs)
+                return UnitsControl.get_units(with_names, in_maintenance)
             raise NotFoundError({'error_msg': 'Resource not found'})
         def POST():
             if not len(args):
