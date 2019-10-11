@@ -26,7 +26,7 @@ class BodyReader:
         return self
 
     def __contains__(self, item):
-            return item in self._body
+        return item in self._body
 
     def __getitem__(self, key):
         if self._body and key in self._body:

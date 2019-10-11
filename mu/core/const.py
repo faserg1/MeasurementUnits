@@ -23,3 +23,8 @@ class ClusterNodeType:
 class DataEncoding:
 	NONE = 0
 	BASE64 = 1
+
+class TextFormat:
+	PLAIN_TEXT = 0
+	RICH_TEXT = 1
+	HTML_TEXT = 2
