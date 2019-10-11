@@ -6,9 +6,6 @@ from .user import User
 from .org import Organization
 from .master import Master
 
-from datetime import datetime
-import uuid
-
 class EntityLog(Model):
 	"""Лог системы"""
 	id = UUIDField(primary_key = True, help_text = 'Идентификатор записи лога')
@@ -23,23 +20,3 @@ class EntityLog(Model):
 
 	class Meta:
 	    table_name = 'entity_log'
-
-class LogWriter:
-	@staticmethod
-	def push(entity_id, user, org, master_key, mod_type, data, msg):
-		if master_key and (user or org):
-			raise ValueError('There must be set only one master-key OR user/+org')
-		timestamp = datetime.utcnow()
-		id = uuid.uuid4()
-		with EntityLog.atomic() as txn:
-			EntityLog.insert(id = id, entity = entity_id, user = user, org = org,
-				master_key = master_key, mod_type = mod_type, timestamp = timestamp,
-				data = data, user_msg = msg).execute()
-
-	@staticmethod
-	def push_as_master(entity_id, master_key, mod_type, data, msg):
-		return LogWriter.push(entity_id, None, None, master_key, mod_type, data, msg)
-
-	@staticmethod
-	def push_as_user(entity_id, user, org, mod_type, data, msg):
-		return LogWriter.push(entity_id, user, org, None, mod_type,  data, msg)

@@ -5,6 +5,7 @@ from utils.format import formattable
 from utils.rest import invoke_by_method
 from utils.error import (BadRequestError, NotFoundError, MethodNotAllowedError)
 from utils.body_reader import (BodyReader, MultiKeyError)
+from utils.query import QueryHelper
 from core.auth import (AuthMode, authable)
 from core.units import UnitsControl
 
@@ -14,7 +15,14 @@ class Units:
     @authable(AuthMode.USER | AuthMode.ORG)
     def default(self, *args, **kwargs):
         def GET():
-            pass
+            if not len(args):
+                search_query = QueryHelper.get_string('search', kwargs)
+                in_maintenance = QueryHelper.get_int('in_maintenance', kwargs)
+                if search_query:
+                    return UnitsControl.search_units(search_query, in_maintenance)
+                with_names = QueryHelper.get_bool('names', kwargs)
+                return UnitsControl.get_units(with_names, in_maintenance)
+            raise NotFoundError({'error_msg': 'Resource not found'})
         def POST():
             if not len(args):
                 return UnitsControl.create_unit()

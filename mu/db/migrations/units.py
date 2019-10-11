@@ -3,6 +3,8 @@
 from .base import migration
 
 from db.scheme.unit_format import Unit
+from db.scheme.unit_ownership_user import UnitOwnershipUser
+from db.scheme.unit_ownership_org import UnitOwnershipOrganizaton
 from db.scheme.unit_name import UnitName
 from db.scheme.unit_group import UnitGroup
 from db.scheme.unit_type import UnitType
@@ -16,7 +18,10 @@ from db.scheme.prefix import Prefix
 @migration('003f2521-48e8-4b27-8954-6240b9765a4b')
 class UnitsMigration:
     _tables = [
-		Unit, UnitName, UnitCode, UnitFormat, UnitType, UnitGroup,
+		Unit,
+        UnitOwnershipUser, UnitOwnershipOrganizaton,
+        UnitName, UnitCode, UnitFormat,
+        UnitType, UnitGroup,
 		SimpleUnit, ComplexUnit, AttachedUnits, Prefix
 	]
 

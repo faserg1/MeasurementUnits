@@ -6,11 +6,11 @@ from .unit import Unit
 from .user import User
 
 class UnitOwnershipUser(Model):
-	""""""
-	id = UUIDField(primary_key = True, help_text = '')
-	user = ForeignKeyField(User, backref = 'ownership', help_text = '')
-	unit = ForeignKeyField(Unit, backref = 'ownership', help_text = '')
-	privacy = SmallIntegerField(index = True, help_text = '')
+	"""Права владения на единицу измерения пользователя"""
+	id = UUIDField(primary_key = True, help_text = 'Идентификатор права')
+	user = ForeignKeyField(User, backref = 'ownership_unit', help_text = 'Идентификатор пользователя владельца')
+	unit = ForeignKeyField(Unit, backref = 'ownership_user', help_text = 'Единица измерения')
+	privacy = SmallIntegerField(index = True, help_text = 'Приватность')
 
 	class Meta:
 		table_name = 'unit_ownership_user'

@@ -4,6 +4,7 @@ import cherrypy
 from utils.format import formattable
 from utils.rest import invoke_by_method
 from utils.error import (BadRequestError, NotFoundError, MethodNotAllowedError)
+from utils.body_reader import (BodyReader, MultiKeyError)
 from core.lang import LanguageControl
 from core.auth import (AuthMode, authable)
 

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import uuid
 from peewee import UUIDField, CharField, SmallIntegerField, ForeignKeyField
 from .model import Model
 from .lang import Language
@@ -13,10 +12,3 @@ class LanguageCode(Model):
 
 	class Meta:
 		table_name = 'lang_code'
-
-	@staticmethod
-	def add_code(lang, type, code):
-		id = uuid.uuid4()
-		with LanguageCode.atomic() as txn:
-			LanguageCode.insert(id = id, lang = lang, code_type = type, code = code).execute()
-			return id

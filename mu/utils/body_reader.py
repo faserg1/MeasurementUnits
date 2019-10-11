@@ -6,8 +6,6 @@ from .format import (check_body, format_from, get_format)
 from .proxy_body import ProxyBody
 
 class MultiKeyError(Exception):
-    _error_paths = []
-
     def __init__(self, msg, error_paths):
         super().__init__(self, msg)
         self._error_paths = copy.deepcopy(error_paths)
@@ -16,13 +14,16 @@ class MultiKeyError(Exception):
         return copy.deepcopy(self._error_paths)
 
 class BodyReader:
-    _body = None
-    _error_paths = []
+    def __init__(self):
+        self._body = None
+        self._error_paths = []
 
     def __enter__(self):
         if check_body():
             format = get_format()
-            self._body = format_from(cherrypy.request.body.read(), format)
+            bytes = cherrypy.request.body.read()
+            if len(bytes):
+                self._body = format_from(bytes, format)
         return self
 
     def __contains__(self, item):
