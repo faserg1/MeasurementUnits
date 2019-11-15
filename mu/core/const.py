@@ -24,6 +24,11 @@ class DataEncoding:
 	NONE = 0
 	BASE64 = 1
 
+class TextFormat:
+	PLAIN_TEXT = 0
+	RICH_TEXT = 1
+	HTML_TEXT = 2
+
 class ComplexUnitType:
 	COMPOSITE = 0
 	PREFIX_MODE = 1

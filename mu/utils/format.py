@@ -2,6 +2,8 @@ import json
 import cherrypy
 import re
 
+__VALID_BODY_METHODS = ['POST', 'PUT', 'PATCH']
+
 class ResponseFormat:
 	JSON = 'json'
 	XML = 'xml'
@@ -30,9 +32,9 @@ def check_format(format):
 
 def check_body():
 	valid_methods = ['POST', 'PUT', 'PATCH']
-	return cherrypy.request.body and (
-		not hasattr(cherrypy.request, 'body_readed')) and (
-		cherrypy.request.method in valid_methods)
+	if not cherrypy.request.method in __VALID_BODY_METHODS:
+		return False
+	return cherrypy.request.body not None
 
 def formattable():
 	def format_wrapper(func):
