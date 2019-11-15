@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from peewee import ProgrammingError
 from db.scheme.migration import Migration as MigrationTable
 from db.database import Database
 from .migration_list import get_migration_list
@@ -13,8 +14,11 @@ class Migration:
 			MigrationTable.create_table()
 		db = Database.get()
 		print('Updating database')
-		with db.atomic() as txn:
-			Migration._do_update()
+		try:
+			with db.atomic() as txn:
+				Migration._do_update()
+		except ProgrammingError as er:
+			raise er
 
 	@staticmethod
 	def _do_update():

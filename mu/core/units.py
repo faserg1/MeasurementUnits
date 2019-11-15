@@ -38,14 +38,14 @@ class UnitsControl:
                 raise ex
 
     @staticmethod
-    def get_units(with_names = False, in_maintenance = -1):
+    def get_units(with_names = False, in_maintenance = 0):
         user_id = get_user_id()
         units = UnitRepository.list_for_user(user_id, with_names, in_maintenance)
         units_mapped = [UnitMapper.map_unit(unit) for unit in units]
         return {'units': units_mapped, 'count': len(units_mapped)}
 
     @staticmethod
-    def search_units(search_query, in_maintenance = -1):
+    def search_units(search_query, in_maintenance = 0):
         user_id = get_user_id()
         units = UnitRepository.search_for_user(user_id, search_query, in_maintenance)
         units_mapped = [UnitMapper.map_unit(unit) for unit in units]

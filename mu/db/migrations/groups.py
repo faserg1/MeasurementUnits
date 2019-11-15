@@ -4,7 +4,6 @@ from .base import migration
 
 from db.scheme.lang import Language
 from db.scheme.lang_code import LanguageCode
-from db.scheme.format import Format
 from db.scheme.standard import Standard
 from db.scheme.standard_name import StandardName
 from db.scheme.type import Type
@@ -18,8 +17,9 @@ from db.scheme.group_code import GroupCode
 class GroupsMigration:
     _tables = [
         Language, LanguageCode,
-        Format, Standard, StandardName,
-        Type, TypeName, TypeCode, Group, GroupName, GroupCode,
+        Standard, StandardName,
+        Type, TypeName, TypeCode,
+        Group, GroupName, GroupCode,
 	]
 
     description = 'Содержит в себе таблицы с языками, форматами, стандартами, типами и группами'

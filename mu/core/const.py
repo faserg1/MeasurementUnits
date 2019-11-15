@@ -23,3 +23,8 @@ class ClusterNodeType:
 class DataEncoding:
 	NONE = 0
 	BASE64 = 1
+
+class ComplexUnitType:
+	COMPOSITE = 0
+	PREFIX_MODE = 1
+	ENRICHED = 2
