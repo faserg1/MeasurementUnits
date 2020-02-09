@@ -1,46 +1,36 @@
 #!/usr/bin/env python
 
-from db.scheme.master import Master as MasterTable, MasterHelper
+from db.repository.master import MasterRepository
 from utils.error import BadRequestError
-import uuid
+from utils.uuidy import uuidy
 
 class MasterControl:
     @staticmethod
     def setup():
-        if not MasterTable.table_exists():
+        if not MasterRepository.table_exists():
             print("Master table does not exists!")
             return
-        if not MasterHelper.has_keys():
+        if not MasterRepository.has_keys():
             print("First start...")
-            key = MasterHelper.create()
+            key = MasterRepository.create()
             print("Your key: \"" + str(key) + "\"")
 
     @staticmethod
+    def is_first_start():
+        return MasterRepository.is_startup()
+
+    @staticmethod
     def is_master_mode():
-        if not MasterTable.table_exists():
-            print("Master table does not exists!")
-            return True
-        return MasterHelper.is_master_mode()
+        return MasterRepository.is_master_mode()
 
     @staticmethod
     def check_key(key):
-        if not key:
-            raise BadRequestError({'error_msg': 'Ivalid Master-Key'})
-        uuid_key = None
-        try:
-            uuid_key = uuid.UUID(key)
-        except ValueError as e:
-            raise BadRequestError({'error_msg': 'Ivalid Master-Key'})
-        return MasterHelper.check(uuid_key)
-
+        return MasterRepository.check(uuidy(key, MasterRepository.key_error))
 
     @staticmethod
     def revoke_key(key):
-        if not key:
-            raise BadRequestError({'error_msg': 'Ivalid Master-Key'})
-        uuid_key = None
-        try:
-            uuid_key = uuid.UUID(key)
-        except ValueError as e:
-            raise BadRequestError({'error_msg': 'Ivalid Master-Key'})
-        MasterHelper.revoke(uuid_key)
+        MasterRepository.revoke(uuidy(key, MasterRepository.key_error))
+
+    @staticmethod
+    def key_error():
+        raise BadRequestError({'error_msg': 'Ivalid Master-Key'})

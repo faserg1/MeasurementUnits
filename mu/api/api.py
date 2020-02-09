@@ -17,6 +17,8 @@ cherrypy.tree.mount(App(), '/app/mu/api')
 cherrypy.engine.subscribe('before_request', connect_to_db)
 cherrypy.engine.subscribe('after_request', close_db)
 
+cherrypy.config.update({'server.socket_host': '0.0.0.0'})
+# cherrypy.config.update({'tools.response_headers.headers': [('Access-Control-Allow-Origin', '*')]})
 cherrypy.config.update({'request.error_response': handle_error})
 cherrypy.config.update({'tools.trailing_slash.on': False})
 

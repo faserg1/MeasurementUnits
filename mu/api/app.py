@@ -48,7 +48,7 @@ class App(object):
 	def index(self):
 		if cherrypy.request.method != 'GET':
 			raise MethodNotAllowedError({'error_msg': 'Only GET allowed in this request'})
-		return {'maintenance': MasterControl.is_master_mode()}
+		return {'maintenance': MasterControl.is_master_mode(), 'startup': MasterControl.is_first_start()}
 
 	@cherrypy.expose
 	@formattable()

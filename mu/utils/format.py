@@ -1,6 +1,5 @@
 import json
 import cherrypy
-import re
 
 __VALID_BODY_METHODS = ['POST', 'PUT', 'PATCH']
 
@@ -34,7 +33,7 @@ def check_body():
 	valid_methods = ['POST', 'PUT', 'PATCH']
 	if not cherrypy.request.method in __VALID_BODY_METHODS:
 		return False
-	return cherrypy.request.body not None
+	return cherrypy.request.body is not None
 
 def formattable():
 	def format_wrapper(func):
@@ -47,6 +46,7 @@ def formattable():
 			if response:
 				body, content_type = format_as(response, format)
 				cherrypy.response.headers['Content-Type'] = content_type
+				cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
 				return body
 			return None
 		func_wrapper.__name__ = func.__name__

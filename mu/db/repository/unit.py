@@ -5,9 +5,15 @@ from peewee import JOIN
 from db.scheme.unit import Unit
 from db.scheme.unit_name import UnitName
 from db.scheme.unit_relation import UnitRelation
+
+from db.scheme.simple_unit import SimpleUnit
+
+from db.scheme.complex_unit import ComplexUnit
+
 from db.scheme.unit_ownership_user import UnitOwnershipUser
 from db.scheme.unit_ownership_org import UnitOwnershipOrganizaton
-from core.const import Privacy
+
+from core.const import (Privacy, ComplexUnitType)
 
 class UnitRepository:
     #Simple operations
@@ -22,9 +28,22 @@ class UnitRepository:
     def delete_unit(unit_id):
         return Unit.delete().where(User.id == unit_id).execute() > 1
 
-    # Unit types
+    #Unit types
 
-    # TODO: [OOKAMI]
+    def make_simple(unit_id):
+        pass
+
+    def make_complex(unit_id, type):
+        pass
+
+    def is_simple(unit_id):
+        return SimpleUnit.get_or_none(SimpleUnit.id == unit_id) is not None
+
+    def is_complex(unit_id):
+        return ComplexUnit.get_or_none(ComplexUnit.id == unit_id) is not None
+
+    def is_typed(unit_id):
+        return is_simple(unit_id) or is_complex(unit_id)
 
     # Maintenance
 
